@@ -5,11 +5,11 @@ VisualStudioVersion = 17.6.33801.468
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Deixar.MVC", "Deixar.MVC\Deixar.MVC.csproj", "{180611FB-C938-4A4A-A84F-B57C2735C45F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Deixar.API", "Deixar.API\Deixar.API.csproj", "{7EBEB3C6-F4FA-4356-ACA6-7215809D07B8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Deixar.API", "Deixar.API\Deixar.API.csproj", "{7EBEB3C6-F4FA-4356-ACA6-7215809D07B8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Deixar.Domain", "Deixar.Domain\Deixar.Domain.csproj", "{9809154F-7781-4ABF-9CAB-907C5EA46409}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Deixar.Domain", "Deixar.Domain\Deixar.Domain.csproj", "{9809154F-7781-4ABF-9CAB-907C5EA46409}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Deixar.Data", "Deixar.Data\Deixar.Data.csproj", "{E7ABA9BA-BB29-4F3C-A3BD-9066CECB9B34}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Deixar.Data", "Deixar.Data\Deixar.Data.csproj", "{E7ABA9BA-BB29-4F3C-A3BD-9066CECB9B34}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

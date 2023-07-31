@@ -10,6 +10,18 @@ Leave management project using ASP.NET 7 API + MVC + Sentry + Unit Testing+ Seri
 {
   "ConnectionStrings": {
     "DefaultConnection": "Data Source=[DBSOURCENAME];Initial Catalog=DeixarDB;Persist Security Info=True;User ID=[YOURUSERID];Password=[******];TrustServerCertificate=True"
+  },
+  "MailSettings": {
+    "From": "[EMAIL]",
+    "SmtpServer": "smtp.gmail.com",
+    "Port": 465,
+    "UserName": "[USERNAME]",
+    "Password": "[Password]" // This is generated password from security section of google account
+  },
+  "Jwt": {
+    "Audience": "Deixar.MVC",
+    "Issuer": "Deixar.API",
+    "Key": "[JWTKEY]"
   }
 }
 ```
