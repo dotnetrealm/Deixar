@@ -12,6 +12,8 @@ namespace Deixar.API.Middleware
             }
             catch (Exception ex)
             {
+                context.Response.StatusCode = 500;
+                context.Response.WriteAsync(ex.ToString());
                 SentrySdk.CaptureException(ex);
             }
         }

@@ -5,7 +5,7 @@ namespace Deixar.API.Controllers.V1;
 
 [ApiVersion("1.0")]
 [ApiController]
-[EndpointGroupName("v1")]
+
 [Route("api/v{version:apiVersion}/[controller]")]
 [LogMethod]
 public class WeatherForecastController : ControllerBase

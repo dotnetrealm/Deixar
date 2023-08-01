@@ -1,6 +1,8 @@
 ﻿using Deixar.API.Commons;
 using Deixar.Domain.Interfaces;
 using Deixar.DTOs;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Deixar.API.Controllers.V2;
@@ -10,6 +12,7 @@ namespace Deixar.API.Controllers.V2;
 [Route("api/v{version:apiVersion}/[controller]")]
 [EndpointGroupName("v2")]
 [LogMethod]
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class EmailServiceController : ControllerBase
 {
     private readonly IEmailService _emailService;
@@ -21,6 +24,7 @@ public class EmailServiceController : ControllerBase
     /// <summary>
     /// Send mail
     /// </summary>
+    [Authorize(Roles = "HR")]
     [HttpPost]
     public void SendMail(string[] to, string subject, string content)
     {

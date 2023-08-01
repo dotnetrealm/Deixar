@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using System.Reflection;
 
 namespace Deixar.API.Swagger;
 
@@ -9,8 +10,7 @@ public class ConfigureSwaggerOptions : IConfigureNamedOptions<SwaggerGenOptions>
 {
     private readonly IApiVersionDescriptionProvider _provider;
 
-    public ConfigureSwaggerOptions(
-        IApiVersionDescriptionProvider provider)
+    public ConfigureSwaggerOptions(IApiVersionDescriptionProvider provider)
     {
         _provider = provider;
     }
@@ -21,6 +21,33 @@ public class ConfigureSwaggerOptions : IConfigureNamedOptions<SwaggerGenOptions>
     /// <param name="options"></param>
     public void Configure(SwaggerGenOptions options)
     {
+        #region Create section to add JWT token
+        options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+        {
+            In = ParameterLocation.Header,
+            Description = "Please provide token",
+            Name = "Authorization",
+            Type = SecuritySchemeType.Http,
+            BearerFormat = "JWT",
+            Scheme = "Bearer"
+        });
+
+        options.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme()
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type =ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                    Array.Empty<string>()
+                }
+            });
+        #endregion Create section to add JWT token
+
         // add swagger document for every API version discovered
         foreach (var description in _provider.ApiVersionDescriptions)
         {
@@ -28,6 +55,12 @@ public class ConfigureSwaggerOptions : IConfigureNamedOptions<SwaggerGenOptions>
                 description.GroupName,
                 CreateVersionInfo(description));
         }
+
+        //Enable from props => Documentation file(true) => leave path empty for default
+        // Set the comments path for the Swagger JSON and UI .
+        var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+        var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+        options.IncludeXmlComments(xmlPath);
     }
 
     /// <summary>
@@ -43,20 +76,20 @@ public class ConfigureSwaggerOptions : IConfigureNamedOptions<SwaggerGenOptions>
     /// <summary>
     /// Create information about the version of the API
     /// </summary>
-    /// <param name="description"></param>
+    /// <param name="desc"></param>
     /// <returns>Information about the API</returns>
     private OpenApiInfo CreateVersionInfo(ApiVersionDescription desc)
     {
+        string description = (desc.ApiVersion.MajorVersion == 1) ? "Production API" : "Development API";
         var info = new OpenApiInfo()
         {
-            Title = ".NET Core (.NET 6) Web API",
-            Version = desc.ApiVersion.ToString()
+            Title = "Deixar.API",
+            Version = desc.ApiVersion.ToString(),
+            Description = description,
+            Contact = new OpenApiContact { Email = "bhavin.kareliya2017@gmail.com", Name = "Bhavin Kareliya" }
         };
 
-        if (desc.IsDeprecated)
-        {
-            info.Description += " This API version has been deprecated. Please use one of the new APIs available from the explorer.";
-        }
+        if (desc.IsDeprecated) info.Description += " (deprecated)";
 
         return info;
     }

@@ -6,6 +6,5 @@ namespace Deixar.Domain.DTOs
     {
         public User User { get; set; } = null!;
         public string Role { get; set; } = null!;
-        public object FirstName { get; internal set; }
     }
 }

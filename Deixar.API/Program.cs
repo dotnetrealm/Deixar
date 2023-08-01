@@ -1,4 +1,5 @@
 using Deixar.API.Middleware;
+using Deixar.API.Swagger;
 using Deixar.Data.Contexts;
 using Deixar.Data.HealthChecks;
 using Deixar.Data.Repositories;
@@ -7,11 +8,15 @@ using Deixar.Domain.Utilities;
 using Deixar.Domain.Validators;
 using Deixar.DTOs;
 using FluentValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Serilog;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,24 +25,8 @@ builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddSwaggerGen(opt =>
-{
-    opt.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Version = "Version 1.0",
-        Title = "Deixar API",
-        Description = "Production API",
-        Contact = new OpenApiContact { Email = "bhavin.kareliya2017@gmail.com", Name = "Bhavin Kareliya" }
-    });
-
-    opt.SwaggerDoc("v2", new OpenApiInfo
-    {
-        Version = "Version 2.0",
-        Title = "Deixar API",
-        Description = "Development API",
-        Contact = new OpenApiContact { Email = "bhavin.kareliya2017@gmail.com", Name = "Bhavin Kareliya" }
-    });
-});
+//Generate Swagger
+builder.Services.AddSwaggerGen();
 
 //Setup Application DBContext
 builder.Services.AddDbContext<ApplicationDBContext>(opt =>
@@ -53,10 +42,12 @@ builder.Services.AddValidatorsFromAssemblyContaining<UserValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<RoleValidator>();
 
 #region Service Registration
+builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
 var emailconfig = builder.Configuration.GetSection("MailSettings").Get<EmailConfiguration>();
 builder.Services.AddSingleton(emailconfig);
 builder.Services.AddTransient<ExceptionHandlerMiddleware>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+builder.Services.AddScoped<IEmailService, EmailUtility>();
 builder.Services.AddTransient<EmailUtility>();
 builder.Services.AddTransient<TokenUtility>();
 #endregion Service Registration
@@ -74,6 +65,26 @@ builder.Services.AddVersionedApiExplorer(setup =>
 {
     setup.GroupNameFormat = "'v'VVV";
     setup.SubstituteApiVersionInUrl = true;
+});
+
+//JWT Authentication
+builder.Services.AddAuthentication(option =>
+{
+    option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    var key = builder.Configuration["Jwt:Key"];
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        ValidAudience = builder.Configuration["Jwt:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)),
+        ClockSkew = TimeSpan.Zero,
+    };
 });
 
 //Sentry services
@@ -111,6 +122,7 @@ app.UseSentryTracing();
 //Enable serilog logging
 app.UseSerilogRequestLogging();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

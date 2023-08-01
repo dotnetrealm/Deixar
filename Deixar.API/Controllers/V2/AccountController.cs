@@ -30,9 +30,17 @@ public class AccountController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> LoginAsync([FromBody] Credentials creds)
     {
+        if (!await _accountRepository.IsUserExist(creds.EmailAddress)) return BadRequest(new { Error = "User not found!" });
         UserDetails? user = await _accountRepository.GetUserByEmailPasswordAsync(creds.EmailAddress, creds.Password);
-        if (user is null) return BadRequest(new { Error = "User not found!" });
         string token = _tokenUtility.GenerateJWT(user);
         return Ok(new { Success = "Login successful.", Token = token });
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> RegisterUserAsync([FromBody] RegisterUserModel user)
+    {
+        if (!ModelState.IsValid) return BadRequest(new { Error = "Users detail not valid" });
+        int id = await _accountRepository.RegisterUserAsync(user);
+        return Ok(new { Success = "Login successful." });
     }
 }

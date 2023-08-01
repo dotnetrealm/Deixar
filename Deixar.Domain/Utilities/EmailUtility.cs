@@ -1,10 +1,11 @@
-﻿using Deixar.DTOs;
+﻿using Deixar.Domain.Interfaces;
+using Deixar.DTOs;
 using MailKit.Net.Smtp;
 using MimeKit;
 
 namespace Deixar.Domain.Utilities;
 
-public class EmailUtility
+public class EmailUtility : IEmailService
 {
     private readonly EmailConfiguration _emailConfig;
 
