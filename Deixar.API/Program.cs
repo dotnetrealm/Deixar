@@ -42,12 +42,14 @@ builder.Services.AddValidatorsFromAssemblyContaining<UserValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<RoleValidator>();
 
 #region Service Registration
-builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
-var emailconfig = builder.Configuration.GetSection("MailSettings").Get<EmailConfiguration>();
-builder.Services.AddSingleton(emailconfig);
-builder.Services.AddTransient<ExceptionHandlerMiddleware>();
+EmailConfiguration emailConfig = builder.Configuration.GetSection("MailSettings").Get<EmailConfiguration>()!;
+builder.Services.AddSingleton(emailConfig);
+
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
-builder.Services.AddScoped<IEmailService, EmailUtility>();
+builder.Services.AddScoped<IEmailUtility, EmailUtility>();
+
+builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+builder.Services.AddTransient<ExceptionHandlerMiddleware>();
 builder.Services.AddTransient<EmailUtility>();
 builder.Services.AddTransient<TokenUtility>();
 #endregion Service Registration

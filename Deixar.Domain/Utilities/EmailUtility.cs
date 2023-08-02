@@ -5,7 +5,7 @@ using MimeKit;
 
 namespace Deixar.Domain.Utilities;
 
-public class EmailUtility : IEmailService
+public class EmailUtility : IEmailUtility
 {
     private readonly EmailConfiguration _emailConfig;
 
@@ -14,10 +14,6 @@ public class EmailUtility : IEmailService
         _emailConfig = emailConfiguration;
     }
 
-    /// <summary>
-    /// Send mail
-    /// </summary>
-    /// <param name="message">body content</param>
     public void SendMail(Message message)
     {
         MimeMessage emailMessage = CreateEmailMessage(message);
@@ -49,7 +45,7 @@ public class EmailUtility : IEmailService
     }
 
     /// <summary>
-    /// Create body of mail
+    /// Helper method which create mail body
     /// </summary>
     /// <param name="message"></param>
     /// <returns></returns>

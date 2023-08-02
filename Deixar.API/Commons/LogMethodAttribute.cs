@@ -5,8 +5,15 @@ using System.Globalization;
 
 namespace Deixar.API.Commons
 {
+    /// <summary>
+    /// Custom attribute which log each HTTP request & response with datetime stamp
+    /// </summary>
     public class LogMethodAttribute : Attribute, IActionFilter
     {
+        /// <summary>
+        /// Work that happen before action execution
+        /// </summary>
+        /// <param name="context"></param>
         public void OnActionExecuting(ActionExecutingContext context)
         {
             string controllerName = context.Controller.GetType().Name;
@@ -14,6 +21,10 @@ namespace Deixar.API.Commons
             Log.Logger.Information("{controllerName} -> {actionName} -> Executing - {DT}", controllerName, actionName, DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fff", CultureInfo.InvariantCulture));
         }
 
+        /// <summary>
+        /// Work that happen after action execution
+        /// </summary>
+        /// <param name="context"></param>
         public void OnActionExecuted(ActionExecutedContext context)
         {
             string controllerName = context.Controller.GetType().Name;

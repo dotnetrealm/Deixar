@@ -17,9 +17,9 @@ public class TokenUtility
     }
 
     /// <summary>
-    /// create new JWT token
+    /// Create JWT token
     /// </summary>
-    /// <param name="claims"></param>
+    /// <param name="data">Users information including roles</param>
     /// <returns></returns>
     public string GenerateJWT(UserDetails data)
     {

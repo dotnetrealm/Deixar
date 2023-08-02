@@ -5,6 +5,7 @@ namespace Deixar.Domain.DTOs
     public class RegisterUserModel
     {
         public string FirstName { get; set; }
+
         public string? MiddleName { get; set; }
 
         public string LastName { get; set; }
@@ -20,9 +21,6 @@ namespace Deixar.Domain.DTOs
 
         public string? Address { get; set; }
 
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
-        public bool IsDeleted { get; set; } = false;
         public string Role { get; set; } = null!;
     }
 }

@@ -35,7 +35,7 @@ namespace Deixar.Data.Repositories
         public async Task<string> GetUserRoles(string email)
         {
             int userId = _db.Users.FirstAsync(u => u.EmailAddress == email).Result.Id;
-            var roles = _db.UserRoles.Where(ur => ur.UserId == userId)
+            var roles = await _db.UserRoles.Where(ur => ur.UserId == userId)
                 .Join(_db.Roles, ur => ur.RoleId, r => r.Id, (ur, r) => new { ur.RoleId, r.RoleName })
                 .Select(ur => ur.RoleName).ToArrayAsync();
             return String.Join(", ", roles);
@@ -57,9 +57,11 @@ namespace Deixar.Data.Repositories
                     IsDeleted = false,
                     MiddleName = user.MiddleName
                 });
+                await _db.SaveChangesAsync();
                 int id = _db.Users.Max(u => u.Id);
                 int roleId = _db.Roles.SingleAsync(r => r.RoleName == user.Role).Result.Id;
                 await _db.UserRoles.AddAsync(new UserRole() { RoleId = roleId, UserId = id });
+                await _db.SaveChangesAsync();
                 return id;
             }
             catch
