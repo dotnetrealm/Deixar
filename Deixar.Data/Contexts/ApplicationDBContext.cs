@@ -12,6 +12,8 @@ namespace Deixar.Data.Contexts
         public DbSet<Role> Roles { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
 
+        public DbSet<Leave> Leaves { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //Configure entities

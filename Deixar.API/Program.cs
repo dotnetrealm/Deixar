@@ -46,6 +46,7 @@ EmailConfiguration emailConfig = builder.Configuration.GetSection("MailSettings"
 builder.Services.AddSingleton(emailConfig);
 
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+builder.Services.AddScoped<ILeaveRepository, LeaveRepository>();
 builder.Services.AddScoped<IEmailUtility, EmailUtility>();
 
 builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
@@ -76,7 +77,7 @@ builder.Services.AddAuthentication(option =>
     option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(options =>
 {
-    var key = builder.Configuration["Jwt:Key"];
+    var key = builder.Configuration["Jwt:Key"]!;
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,

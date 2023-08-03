@@ -6,7 +6,7 @@ using System.Globalization;
 namespace Deixar.API.Commons
 {
     /// <summary>
-    /// Custom attribute which log each HTTP request & response with datetime stamp
+    /// Custom attribute which log each HTTP request and response with datetime stamp
     /// </summary>
     public class LogMethodAttribute : Attribute, IActionFilter
     {

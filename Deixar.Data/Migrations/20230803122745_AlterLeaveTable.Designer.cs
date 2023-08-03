@@ -4,6 +4,7 @@ using Deixar.Data.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Deixar.Data.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20230803122745_AlterLeaveTable")]
+    partial class AlterLeaveTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,7 +54,7 @@ namespace Deixar.Data.Migrations
 
                     b.HasIndex("StatusUpdatedById");
 
-                    b.ToTable("Leaves", (string)null);
+                    b.ToTable("Leaves");
                 });
 
             modelBuilder.Entity("Deixar.Domain.Entities.Role", b =>
@@ -71,7 +74,7 @@ namespace Deixar.Data.Migrations
                     b.HasIndex("RoleName")
                         .IsUnique();
 
-                    b.ToTable("Roles", (string)null);
+                    b.ToTable("Roles");
 
                     b.HasData(
                         new
@@ -131,7 +134,7 @@ namespace Deixar.Data.Migrations
                     b.HasIndex("EmailAddress")
                         .IsUnique();
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
 
                     b.HasData(
                         new
@@ -181,7 +184,7 @@ namespace Deixar.Data.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("UserRoles", (string)null);
+                    b.ToTable("UserRoles");
 
                     b.HasData(
                         new

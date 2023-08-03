@@ -4,6 +4,7 @@ using Deixar.Data.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Deixar.Data.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20230803120055_addLeavesTable")]
+    partial class addLeavesTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,20 +41,21 @@ namespace Deixar.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Notes")
+                        .IsRequired()
                         .HasColumnType("nvarchar(400)");
 
                     b.Property<string>("Reason")
                         .IsRequired()
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<int?>("StatusUpdatedById")
+                    b.Property<int>("StatusUpdatedById")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("StatusUpdatedById");
 
-                    b.ToTable("Leaves", (string)null);
+                    b.ToTable("Leaves");
                 });
 
             modelBuilder.Entity("Deixar.Domain.Entities.Role", b =>
@@ -71,7 +75,7 @@ namespace Deixar.Data.Migrations
                     b.HasIndex("RoleName")
                         .IsUnique();
 
-                    b.ToTable("Roles", (string)null);
+                    b.ToTable("Roles");
 
                     b.HasData(
                         new
@@ -131,14 +135,14 @@ namespace Deixar.Data.Migrations
                     b.HasIndex("EmailAddress")
                         .IsUnique();
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
 
                     b.HasData(
                         new
                         {
                             Id = 1,
                             ContactNumber = "1231231231",
-                            CreatedAt = new DateTime(2023, 8, 3, 12, 27, 45, 382, DateTimeKind.Utc).AddTicks(4296),
+                            CreatedAt = new DateTime(2023, 8, 3, 12, 0, 55, 472, DateTimeKind.Utc).AddTicks(2314),
                             EmailAddress = "bhavin@gmail.com",
                             FirstName = "Bhavin",
                             IsDeleted = false,
@@ -149,7 +153,7 @@ namespace Deixar.Data.Migrations
                         {
                             Id = 2,
                             ContactNumber = "1231231231",
-                            CreatedAt = new DateTime(2023, 8, 3, 12, 27, 45, 382, DateTimeKind.Utc).AddTicks(4301),
+                            CreatedAt = new DateTime(2023, 8, 3, 12, 0, 55, 472, DateTimeKind.Utc).AddTicks(2319),
                             EmailAddress = "jil@gmail.com",
                             FirstName = "Jil",
                             IsDeleted = true,
@@ -160,7 +164,7 @@ namespace Deixar.Data.Migrations
                         {
                             Id = 3,
                             ContactNumber = "1231231231",
-                            CreatedAt = new DateTime(2023, 8, 3, 12, 27, 45, 382, DateTimeKind.Utc).AddTicks(4303),
+                            CreatedAt = new DateTime(2023, 8, 3, 12, 0, 55, 472, DateTimeKind.Utc).AddTicks(2320),
                             EmailAddress = "vipul@gmail.com",
                             FirstName = "Vipul",
                             IsDeleted = false,
@@ -181,7 +185,7 @@ namespace Deixar.Data.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("UserRoles", (string)null);
+                    b.ToTable("UserRoles");
 
                     b.HasData(
                         new
@@ -205,7 +209,9 @@ namespace Deixar.Data.Migrations
                 {
                     b.HasOne("Deixar.Domain.Entities.User", "StatusUpdatedBy")
                         .WithMany()
-                        .HasForeignKey("StatusUpdatedById");
+                        .HasForeignKey("StatusUpdatedById")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("StatusUpdatedBy");
                 });

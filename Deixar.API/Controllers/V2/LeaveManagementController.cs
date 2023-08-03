@@ -1,0 +1,128 @@
+﻿using Deixar.API.Commons;
+using Deixar.Domain.DTOs;
+using Deixar.Domain.Entities;
+using Deixar.Domain.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+using System.Text.Json;
+
+namespace Deixar.API.Controllers.V2
+{
+    [LogMethod]
+    [ApiController]
+    [ApiVersion("2.0")]
+    [EndpointGroupName("v2")]
+    [Route("api/v{version:apiVersion}/[controller]/[action]")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public class LeaveManagementController : ControllerBase
+    {
+        private readonly ILeaveRepository _leaveRepository;
+
+        public LeaveManagementController(ILeaveRepository leaveRepository)
+        {
+            _leaveRepository = leaveRepository;
+        }
+
+        public  async Task<IActionResult> GetAllLeaveRequest()
+        {
+            int userId = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "Id")!.Value);
+            IEnumerable<Leave> leaves = await _leaveRepository.GetAllUserLeaveRequestsByIdAsync(userId);
+            return Ok(new { Message = $"Leave request of UserId {userId} retrived successfully.", Leaves = leaves });
+        }
+
+        /// <summary>
+        /// Add new leave request
+        /// </summary>
+        /// <param name="leaveRequest"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<IActionResult> AddLeaveRequestAsync(LeaveRequestModel leaveRequest)
+        {
+            if (!ModelState.IsValid) return BadRequest(new { Error = "Please enter valid details" });
+
+            int userId = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "Id")!.Value);
+            Leave leave = new()
+            {
+                CreatedBy = userId,
+                IsPaidLeave = leaveRequest.IsPaidLeave,
+                Reason = leaveRequest.Reason,
+                LeaveDate = leaveRequest.LeaveDate,
+                IsApproved = false
+            };
+
+            bool isCreated = await _leaveRepository.CreateLeaveRequestAsync(leave);
+            if (!isCreated) return BadRequest(new { Error = "Something went wrong while creating leave request!" });
+
+            return Ok(new { Message = $"Leave request created successfully. (ID: {leave.Id})" });
+        }
+
+        /// <summary>
+        /// Update existing leave request
+        /// </summary>
+        /// <param name="leaveRequestId"> leave</param>
+        /// <param name="leaveRequest"> leave</param>
+        /// <returns></returns>
+        [HttpPut]
+        public async Task<IActionResult> UpdateLeaveRequestAsync(Guid leaveRequestId, LeaveRequestModel leaveRequest)
+        {
+            if (!ModelState.IsValid) return BadRequest(new { Error = "Please enter valid details" });
+
+            Leave leave = new()
+            {
+                IsPaidLeave = leaveRequest.IsPaidLeave,
+                Reason = leaveRequest.Reason,
+                LeaveDate = leaveRequest.LeaveDate,
+            };
+
+            bool isUpdated = await _leaveRepository.UpdateLeaveRequestAsync(leaveRequestId, leave);
+            if (!isUpdated) return BadRequest(new { Error = "Something went wrong while updating leave request!" });
+            return Ok(new { Message = "Leave request updated successfully" });
+        }
+
+        /// <summary>
+        /// Remove leave request 
+        /// </summary>
+        /// <param name="leaveRequestId">Leave request id</param>
+        /// <returns></returns>
+        [HttpDelete]
+        public async Task<IActionResult> DeleteLeaveRequest(Guid leaveRequestId)
+        {
+            bool isDeleted = await _leaveRepository.DeleteLeaveRequestAsync(leaveRequestId);
+            if (!isDeleted) return BadRequest(new { Error = "Something went wrong while deleting leave request!" });
+            return Ok(new { Message = "Leave request deleted successfully." });
+        }
+
+        /// <summary>
+        /// Approve leave request (HR access only)
+        /// </summary>
+        /// <param name="leaveRequestId">Leave request id</param>
+        /// <returns></returns>
+        [HttpPut]
+        [Authorize(Roles = "HR")]
+        public async Task<IActionResult> ApproveLeaveRequest(Guid leaveRequestId)
+        {
+            int userId = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "Id")!.Value);
+            bool isApproved = await _leaveRepository.ApproveLeaveRequestAsync(leaveRequestId, userId);
+            if (!isApproved) return BadRequest(new { Error = "Something went wrong while approving leave request!" });
+            return Ok(new { Message = "Leave request approved successfully." });
+        }
+
+        /// <summary>
+        /// Reject leave request (HR access only)
+        /// </summary>
+        /// <param name="leaveRequestId">Leave request id</param>
+        /// <param name="notes">Notes</param>
+        /// <returns></returns>
+        [HttpPut]
+        [Authorize(Roles = "HR")]
+        public async Task<IActionResult> RejectLeaveRequest(Guid leaveRequestId, string notes)
+        {
+            int userId = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "Id")!.Value);
+            bool isRejected = await _leaveRepository.RejectLeaveRequest(leaveRequestId, userId, notes);
+            if (!isRejected) return BadRequest(new { Error = "Something went wrong while rejecting leave request!" });
+            return Ok(new { Message = "Leave request rejected." });
+        }
+    }
+}
