@@ -9,9 +9,9 @@ namespace Deixar.Data.Contexts
         public static void SeedUsers(this ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>().HasData(
-                    new User() { Id = 1, FirstName = "Bhavin", LastName = "Kareliya", EmailAddress = "bhavin@gmail.com", Password = "123123", ContactNumber = "1231231231", IsDeleted = false },
-                    new User() { Id = 2, FirstName = "Jil", LastName = "Patel", EmailAddress = "jil@gmail.com", Password = "123123", ContactNumber = "1231231231", IsDeleted = true },
-                    new User() { Id = 3, FirstName = "Vipul", LastName = "Kumar", EmailAddress = "vipul@gmail.com", Password = "123123", ContactNumber = "1231231231", IsDeleted = false }
+                    new User() { Id = 1, FirstName = "Bhavin", LastName = "Kareliya", EmailAddress = "bhavin@gmail.com", Password = "123123", ContactNumber = "1231231231", IsDeleted = false, CreatedAt = new DateTime(2023, 8, 1)},
+                    new User() { Id = 2, FirstName = "Jil", LastName = "Patel", EmailAddress = "jil@gmail.com", Password = "123123", ContactNumber = "1231231231", IsDeleted = true, CreatedAt = new DateTime(2023, 8, 1) },
+                    new User() { Id = 3, FirstName = "Vipul", LastName = "Kumar", EmailAddress = "vipul@gmail.com", Password = "123123", ContactNumber = "1231231231", IsDeleted = false, CreatedAt = new DateTime(2023, 8, 1) }
                 );
         }
 

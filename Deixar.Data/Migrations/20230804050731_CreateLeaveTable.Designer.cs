@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Deixar.Data.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20230803122745_AlterLeaveTable")]
-    partial class AlterLeaveTable
+    [Migration("20230804050731_CreateLeaveTable")]
+    partial class CreateLeaveTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -31,6 +31,9 @@ namespace Deixar.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsApproved")
                         .HasColumnType("bit");
 
@@ -47,12 +50,14 @@ namespace Deixar.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<int?>("StatusUpdatedById")
+                    b.Property<int?>("StatusUpdatedBy")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("StatusUpdatedById");
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("StatusUpdatedBy");
 
                     b.ToTable("Leaves");
                 });
@@ -141,7 +146,7 @@ namespace Deixar.Data.Migrations
                         {
                             Id = 1,
                             ContactNumber = "1231231231",
-                            CreatedAt = new DateTime(2023, 8, 3, 12, 27, 45, 382, DateTimeKind.Utc).AddTicks(4296),
+                            CreatedAt = new DateTime(2023, 8, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EmailAddress = "bhavin@gmail.com",
                             FirstName = "Bhavin",
                             IsDeleted = false,
@@ -152,7 +157,7 @@ namespace Deixar.Data.Migrations
                         {
                             Id = 2,
                             ContactNumber = "1231231231",
-                            CreatedAt = new DateTime(2023, 8, 3, 12, 27, 45, 382, DateTimeKind.Utc).AddTicks(4301),
+                            CreatedAt = new DateTime(2023, 8, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EmailAddress = "jil@gmail.com",
                             FirstName = "Jil",
                             IsDeleted = true,
@@ -163,7 +168,7 @@ namespace Deixar.Data.Migrations
                         {
                             Id = 3,
                             ContactNumber = "1231231231",
-                            CreatedAt = new DateTime(2023, 8, 3, 12, 27, 45, 382, DateTimeKind.Utc).AddTicks(4303),
+                            CreatedAt = new DateTime(2023, 8, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EmailAddress = "vipul@gmail.com",
                             FirstName = "Vipul",
                             IsDeleted = false,
@@ -206,11 +211,20 @@ namespace Deixar.Data.Migrations
 
             modelBuilder.Entity("Deixar.Domain.Entities.Leave", b =>
                 {
-                    b.HasOne("Deixar.Domain.Entities.User", "StatusUpdatedBy")
+                    b.HasOne("Deixar.Domain.Entities.User", "CreatedByUser")
                         .WithMany()
-                        .HasForeignKey("StatusUpdatedById");
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
-                    b.Navigation("StatusUpdatedBy");
+                    b.HasOne("Deixar.Domain.Entities.User", "StatusUpdatedByUser")
+                        .WithMany()
+                        .HasForeignKey("StatusUpdatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("CreatedByUser");
+
+                    b.Navigation("StatusUpdatedByUser");
                 });
 
             modelBuilder.Entity("Deixar.Domain.Entities.UserRole", b =>

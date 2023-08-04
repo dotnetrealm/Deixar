@@ -33,6 +33,11 @@ namespace Deixar.Data.Repositories
             }
         }
 
+        public async Task<Leave> GetUserLeaveRequestByIdAsync(Guid leaveId)
+        {
+            return await _db.Leaves.FirstOrDefaultAsync(l => l.Id == leaveId);
+        }
+
         public async Task<bool> UpdateLeaveRequestAsync(Guid requestId, Leave leave)
         {
             try

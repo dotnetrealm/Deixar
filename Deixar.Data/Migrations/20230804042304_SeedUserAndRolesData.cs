@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -7,7 +8,7 @@
 namespace Deixar.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class SeedData : Migration
+    public partial class SeedUserAndRolesData : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -26,9 +27,9 @@ namespace Deixar.Data.Migrations
                 columns: new[] { "Id", "Address", "ContactNumber", "CreatedAt", "EmailAddress", "FirstName", "IsDeleted", "LastName", "MiddleName", "Password" },
                 values: new object[,]
                 {
-                    { 1, null, "1231231231", new DateTime(2023, 7, 31, 2, 16, 1, 71, DateTimeKind.Utc).AddTicks(5161), "bhavin@gmail.com", "Bhavin", false, "Kareliya", null, "123123" },
-                    { 2, null, "1231231231", new DateTime(2023, 7, 31, 2, 16, 1, 71, DateTimeKind.Utc).AddTicks(5166), "jil@gmail.com", "Jil", true, "Patel", null, "123123" },
-                    { 3, null, "1231231231", new DateTime(2023, 7, 31, 2, 16, 1, 71, DateTimeKind.Utc).AddTicks(5168), "vipul@gmail.com", "Vipul", false, "Kumar", null, "123123" }
+                    { 1, null, "1231231231", new DateTime(2023, 8, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "bhavin@gmail.com", "Bhavin", false, "Kareliya", null, "123123" },
+                    { 2, null, "1231231231", new DateTime(2023, 8, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "jil@gmail.com", "Jil", true, "Patel", null, "123123" },
+                    { 3, null, "1231231231", new DateTime(2023, 8, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "vipul@gmail.com", "Vipul", false, "Kumar", null, "123123" }
                 });
 
             migrationBuilder.InsertData(

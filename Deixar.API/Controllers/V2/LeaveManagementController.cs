@@ -5,8 +5,6 @@ using Deixar.Domain.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
-using System.Text.Json;
 
 namespace Deixar.API.Controllers.V2
 {
@@ -25,11 +23,29 @@ namespace Deixar.API.Controllers.V2
             _leaveRepository = leaveRepository;
         }
 
-        public  async Task<IActionResult> GetAllLeaveRequest()
+        /// <summary>
+        /// Returns all leave request of current user (Login required)
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<IActionResult> GetAllLeaveRequest()
         {
             int userId = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "Id")!.Value);
             IEnumerable<Leave> leaves = await _leaveRepository.GetAllUserLeaveRequestsByIdAsync(userId);
             return Ok(new { Message = $"Leave request of UserId {userId} retrived successfully.", Leaves = leaves });
+        }
+
+        /// <summary>
+        /// Get single leave request given by Leave Id
+        /// </summary>
+        /// <param name="leaveRequestId"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<IActionResult> GetLeaveRequest(Guid leaveRequestId)
+        {
+            Leave leave = await _leaveRepository.GetUserLeaveRequestByIdAsync(leaveRequestId);
+            if (leave == null) return NotFound("Leave request not found!");
+            return Ok(new { Message = $"Leave request retrived successfully.", Leave = leave });
         }
 
         /// <summary>
@@ -67,7 +83,7 @@ namespace Deixar.API.Controllers.V2
         [HttpPut]
         public async Task<IActionResult> UpdateLeaveRequestAsync(Guid leaveRequestId, LeaveRequestModel leaveRequest)
         {
-            if (!ModelState.IsValid) return BadRequest(new { Error = "Please enter valid details" });
+            if (!ModelState.IsValid || String.IsNullOrEmpty(leaveRequestId.ToString())) return BadRequest(new { Error = "Please enter valid details" });
 
             Leave leave = new()
             {

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Deixar.Data.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20230731021601_SeedData")]
-    partial class SeedData
+    [Migration("20230804042304_SeedUserAndRolesData")]
+    partial class SeedUserAndRolesData
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -109,7 +109,7 @@ namespace Deixar.Data.Migrations
                         {
                             Id = 1,
                             ContactNumber = "1231231231",
-                            CreatedAt = new DateTime(2023, 7, 31, 2, 16, 1, 71, DateTimeKind.Utc).AddTicks(5161),
+                            CreatedAt = new DateTime(2023, 8, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EmailAddress = "bhavin@gmail.com",
                             FirstName = "Bhavin",
                             IsDeleted = false,
@@ -120,7 +120,7 @@ namespace Deixar.Data.Migrations
                         {
                             Id = 2,
                             ContactNumber = "1231231231",
-                            CreatedAt = new DateTime(2023, 7, 31, 2, 16, 1, 71, DateTimeKind.Utc).AddTicks(5166),
+                            CreatedAt = new DateTime(2023, 8, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EmailAddress = "jil@gmail.com",
                             FirstName = "Jil",
                             IsDeleted = true,
@@ -131,7 +131,7 @@ namespace Deixar.Data.Migrations
                         {
                             Id = 3,
                             ContactNumber = "1231231231",
-                            CreatedAt = new DateTime(2023, 7, 31, 2, 16, 1, 71, DateTimeKind.Utc).AddTicks(5168),
+                            CreatedAt = new DateTime(2023, 8, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EmailAddress = "vipul@gmail.com",
                             FirstName = "Vipul",
                             IsDeleted = false,

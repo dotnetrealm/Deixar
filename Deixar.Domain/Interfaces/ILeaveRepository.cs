@@ -12,6 +12,13 @@ namespace Deixar.Domain.Interfaces
         Task<IEnumerable<Leave>> GetAllUserLeaveRequestsByIdAsync(int userId);
 
         /// <summary>
+        /// Returs leave request by leave request id
+        /// </summary>
+        /// <param name="leaveId">Leave request Id</param>
+        /// <returns></returns>
+        Task<Leave> GetUserLeaveRequestByIdAsync(Guid leaveId);
+
+        /// <summary>
         /// Create new leave request
         /// </summary>
         /// <param name="leave"></param>

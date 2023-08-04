@@ -22,10 +22,10 @@ namespace Deixar.Domain.Entities
         public int CreatedBy { get; set; }
 
         [ForeignKey("StatusUpdatedByUser")]
-        public int StatusUpdatedBy { get; set; }
+        public int? StatusUpdatedBy { get; set; }
 
         //Relational property
-        public User? CreatedByUser { get; set; }
+        public User CreatedByUser { get; set; }
         public User? StatusUpdatedByUser { get; set; }
     }
 }
