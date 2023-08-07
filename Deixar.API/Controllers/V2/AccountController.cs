@@ -11,7 +11,6 @@ namespace Deixar.API.Controllers.V2;
 [LogMethod]
 [ApiController]
 [ApiVersion("2.0")]
-[EndpointGroupName("v2")]
 [Route("api/v{version:apiVersion}/[controller]/[action]")]
 public class AccountController : ControllerBase
 {
